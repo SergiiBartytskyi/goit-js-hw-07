@@ -3,61 +3,39 @@ import { galleryItems } from "./gallery-items.js";
 
 console.log(galleryItems);
 
-const cardsContainer = document.querySelector(".gallery");
-const cardsMarkup = creatGalleryCards(galleryItems);
+const gallery = document.querySelector(".gallery");
+const galleryList = createGalleryCard(galleryItems);
+gallery.insertAdjacentHTML("beforeend", galleryList);
 
-cardsContainer.insertAdjacentHTML("beforeend", cardsMarkup);
+gallery.addEventListener("click", onCardClick);
 
-cardsContainer.addEventListener("click", onClick);
-
-function onClick(e) {
+function onCardClick(e) {
 	e.preventDefault();
-
-	if (e.target.NodeName !== "IMG") {
+	if (!e.target.classList.contains("gallery__image")) {
 		return;
 	}
-	console.log(e.target.NodeName);
-
-	// 	const instance = basicLightbox.create(`
-	//     <img src="${e.target.dataset.source}" width="800" height="600">
-	// `);
-	// 	instance.show();
-
-	// 	cardsContainer.addEventListener("keydown", e => {
-	// 		if (e.code === "Escape") {
-	// 			instance.close();
-	// 		}
-	// 	});
-
-	const instance = basicLightbox.create(
-		` <div class="modal"> <img src="${urlOriginalSizePicture}" alt="Big Pictures"/> </div> `,
-		{
-			onShow: instance => {
-				galleryContainer.addEventListener("keydown", onEscapeButton);
-			},
-			onClose: instance => {
-				galleryContainer.removeEventListener("keydown", onEscapeButton);
-			},
-		},
-	);
+	const instance = basicLightbox.create(`<img src = "${e.target.dataset.source}" width="800" height="600">`);
 	instance.show();
-	function onEscapeButton(evt) {
-		if (evt.key === "Escape") {
+	gallery.addEventListener("keydown", e => {
+		if (e.code === "Escape") {
 			instance.close();
 		}
-	}
+		return gallery.removeEventListener;
+	});
 }
 
-function creatGalleryCards(images) {
-	return images
+function createGalleryCard(cardItems) {
+	return cardItems
 		.map(({ preview, original, description }) => {
 			return `
-        <div class="gallery__item">
-            <a class="gallery__link" href="original">
-                <img class="gallery__image" src="${preview}" data-source="${original}" alt="${description}"
-                />
-                </a>
-                </div>`;
+        <div class = "gallery__item">
+            <a class= "gallery__link" href="${original}">
+                <img
+                    class= "gallery__image"
+                    src="${preview}"
+                    data-source="${original}"
+                    alt="${description}"
+                    /></a></div>`;
 		})
 		.join("");
 }
